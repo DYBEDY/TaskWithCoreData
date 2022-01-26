@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0665340827A18EAC008B0FFE /* StorageMangaer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0665340727A18EAC008B0FFE /* StorageMangaer.swift */; };
 		06765C78279F14040082C560 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06765C77279F14040082C560 /* AppDelegate.swift */; };
 		06765C7C279F14040082C560 /* TaskListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06765C7B279F14040082C560 /* TaskListViewController.swift */; };
 		06765C82279F14040082C560 /* CoreDataDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 06765C80279F14040082C560 /* CoreDataDemo.xcdatamodeld */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0665340727A18EAC008B0FFE /* StorageMangaer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageMangaer.swift; sourceTree = "<group>"; };
 		06765C74279F14040082C560 /* CoreDataDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreDataDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06765C77279F14040082C560 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06765C7B279F14040082C560 /* TaskListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 			children = (
 				06765C77279F14040082C560 /* AppDelegate.swift */,
 				06765C7B279F14040082C560 /* TaskListViewController.swift */,
+				0665340727A18EAC008B0FFE /* StorageMangaer.swift */,
 				06765C83279F14050082C560 /* Assets.xcassets */,
 				06765C85279F14050082C560 /* LaunchScreen.storyboard */,
 				06765C88279F14050082C560 /* Info.plist */,
@@ -137,6 +140,7 @@
 				06765C7C279F14040082C560 /* TaskListViewController.swift in Sources */,
 				06765C82279F14040082C560 /* CoreDataDemo.xcdatamodeld in Sources */,
 				06765C78279F14040082C560 /* AppDelegate.swift in Sources */,
+				0665340827A18EAC008B0FFE /* StorageMangaer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
