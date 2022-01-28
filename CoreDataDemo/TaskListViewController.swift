@@ -9,7 +9,7 @@ import UIKit
 
 
 class TaskListViewController: UITableViewController {
-    private let context = StorageManager.shared.persistentContainer.viewContext
+   
 
     
     private let cellID = "task"
@@ -22,14 +22,10 @@ class TaskListViewController: UITableViewController {
         self.tableView.allowsMultipleSelectionDuringEditing = false
         setupNavigationBar()
         fetchData()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        fetchData()
         tableView.reloadData()
     }
- 
+    
+
     private func setupNavigationBar() {
         title = "Task List"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -64,34 +60,29 @@ class TaskListViewController: UITableViewController {
     }
     
     private func fetchData() {
-        let fetchRequest = Task.fetchRequest()
-        
-        do {
-            taskList = try context.fetch(fetchRequest)
-        } catch {
-           print("Faild to fetch data", error)
+        StorageManager.shared.fetchData { result in
+            switch result {
+                
+            case .success(let tasks):
+                self.taskList = tasks
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
     }
     
-
-    private func save(_ taskName: String) {
-        
-        let task = Task(context: context)
-        task.name = taskName
-        taskList.append(task)
-        
-        let cellIndex = IndexPath(row: taskList.count - 1, section: 0)
-        tableView.insertRows(at: [cellIndex], with: .automatic)
-        
-        StorageManager.shared.saveContext()
-        
+    
+    private func save(taskName: String) {
+        StorageManager.shared.save(taskName) { task in
+            self.taskList.append(task)
+            self.tableView.insertRows(at: [IndexPath(row: self.taskList.count - 1, section: 0)], with: .automatic)
+        }
     }
     
     private func delete(at indexPath: IndexPath) {
         let task = taskList.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
-        context.delete(task)
-        StorageManager.shared.saveContext()
+        StorageManager.shared.delete(task)
     }
     
     
@@ -123,17 +114,16 @@ extension TaskListViewController {
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
-        let edit = UIContextualAction(style: .normal, title: "Edit") { action, sourceView, completion in
-            let action = self.editPressed(action: action, sourceView: sourceView, and: indexPath)
+        let edit = UIContextualAction(style: .normal, title: "Edit") { _, _, completion in
+            let action = self.editPressed(at: indexPath)
             completion(action)
         }
         edit.backgroundColor = .green
         edit.image = UIImage(systemName: "square.and.pencil")
 
         
-        
-        let delete = UIContextualAction(style: .normal, title: "Delete") { action, sourceView, completion in
-            let delete = self.deletePressed(action: action, sourceView: sourceView, and: indexPath)
+        let delete = UIContextualAction(style: .normal, title: "Delete") { _, _, completion in
+            let delete = self.deletePressed(at: indexPath)
             completion(delete)
         }
         delete.backgroundColor = .red
@@ -143,13 +133,14 @@ extension TaskListViewController {
         let swipeAction = UISwipeActionsConfiguration(actions: [delete, edit])
         return swipeAction
         }
-
-    func editPressed(action: UIContextualAction, sourceView: UIView, and indexPath: IndexPath) -> Bool {
+    
+    
+    func editPressed(at indexPath: IndexPath) -> Bool {
         editTaskAlert(with: "Edit", and: "Do you want to edit yours task?", and: indexPath)
         return true
     }
 
-    func deletePressed(action: UIContextualAction, sourceView: UIView, and indexPath: IndexPath) -> Bool {
+    func deletePressed(at indexPath: IndexPath) -> Bool {
         deleteTaskAction(with: "DELETE", and: "Move to trash?", and: indexPath)
         return true
     }
@@ -168,7 +159,7 @@ private func addNewTaskAlert(with title: String, and message: String) {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
         guard let task = alert.textFields?.first?.text, !task.isEmpty else { return }
-        self.save(task)
+        self.save(taskName: task)
     }
     
     let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
@@ -190,7 +181,7 @@ private func addNewTaskAlert(with title: String, and message: String) {
             guard let task = alert.textFields?.first?.text else { return }
             taskText.name = task
             self.tableView.reloadData()
-            StorageManager.shared.saveContext()
+            StorageManager.shared.edit(taskText, newName: task)
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
